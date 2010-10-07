@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\Attack.cs" />
+    <Compile Include="Activities\AttackMove.cs" />
     <Compile Include="Activities\CallFunc.cs" />
     <Compile Include="Activities\CaptureBuilding.cs" />
     <Compile Include="Activities\DeliverOre.cs" />

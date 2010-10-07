@@ -15,15 +15,20 @@ namespace OpenRA.Orders
 {
 	public class GenericSelectTarget : IOrderGenerator
 	{
-		readonly Actor subject;
+		readonly IEnumerable<Actor> subjects;
 		readonly string order;
 		readonly string cursor;
 
-		public GenericSelectTarget(Actor subject, string order, string cursor)
+		public GenericSelectTarget(IEnumerable<Actor> subjects, string order, string cursor)
 		{
-			this.subject = subject;
+			this.subjects = subjects;
 			this.order = order;
 			this.cursor = cursor;
+		}
+
+		public GenericSelectTarget(Actor subject, string order, string cursor)
+		{
+			this.subjects = (IEnumerable<Actor>)subject;
 		}
 
 		public IEnumerable<Order> Order(World world, int2 xy, MouseInput mi)
@@ -36,7 +41,12 @@ namespace OpenRA.Orders
 		IEnumerable<Order> OrderInner(World world, int2 xy, MouseInput mi)
 		{
 			if (mi.Button == MouseButton.Left && world.Map.IsInMap(xy))
-				yield return new Order(order, subject, xy);
+			{
+				foreach (var subject in subjects)
+				{
+					yield return new Order(order, subject, xy);
+				}
+			}
 		}
 
 		public virtual void Tick(World world) { }
@@ -63,5 +73,4 @@ namespace OpenRA.Orders
 				world.CancelInputMode();
 		}
 	}
-
 }

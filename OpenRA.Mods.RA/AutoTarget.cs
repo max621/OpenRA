@@ -10,6 +10,7 @@
 
 using System.Linq;
 using OpenRA.Traits;
+using OpenRA.Mods.RA.Activities;
 
 namespace OpenRA.Mods.RA
 {
@@ -39,7 +40,7 @@ namespace OpenRA.Mods.RA
 
 		public void Tick(Actor self)
 		{
-			if (!self.IsIdle && self.Info.Traits.Get<AutoTargetInfo>().AllowMovement) return;
+			if (!self.IsIdle && !(self.GetCurrentActivity() is AttackMove) && self.Info.Traits.Get<AutoTargetInfo>().AllowMovement) return;
 
 			if (--nextScanTime <= 0)
 			{

@@ -146,8 +146,22 @@ namespace OpenRA.Widgets
 					GotoNextBase();
 					return true;
 				}
+
+				if (e.KeyChar == 'a')
+				{
+					StartAttackMoveOrder();
+					return true;
+				}
 			}
 			return false;
+		}
+
+		public void StartAttackMoveOrder()
+		{
+			if (Game.world.Selection.Actors.Count() > 0)
+			{
+				Game.world.OrderGenerator = new GenericSelectTarget(Game.world.Selection.Actors, "AttackMove", "attackmove");
+			}
 		}
 		
 		public void GotoNextBase()

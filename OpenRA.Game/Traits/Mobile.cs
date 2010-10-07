@@ -170,7 +170,7 @@ namespace OpenRA.Traits
 		
 		public void ResolveOrder(Actor self, Order order)
 		{
-			if (order.OrderString == "Move" || order.OrderString == "Move-Blocked")
+			if (order.OrderString == "Move" || order.OrderString == "Move-Blocked" || order.OrderString == "AttackMove")
 			{
 				int2 currentLocation = NearestMoveableCell(order.TargetLocation);
 				if (!CanEnterCell(currentLocation))
@@ -187,6 +187,12 @@ namespace OpenRA.Traits
 						if (line != null)
 							line.SetTarget(self, Target.FromCell(currentLocation), Color.Green);
 					});
+
+				if (order.OrderString == "AttackMove")
+				{
+					if (self.Owner == self.Owner.World.LocalPlayer)
+						self.World.CancelInputMode();
+				}
 			}
 		}
 		
