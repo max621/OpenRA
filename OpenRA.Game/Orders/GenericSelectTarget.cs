@@ -19,7 +19,6 @@ namespace OpenRA.Orders
 		readonly IEnumerable<Actor> subjects;
 		readonly string order;
 		readonly string cursor;
-		List<Actor> singleActor;
 
 		public GenericSelectTarget(IEnumerable<Actor> subjects, string order, string cursor)
 		{
@@ -30,8 +29,7 @@ namespace OpenRA.Orders
 
 		public GenericSelectTarget(Actor subject, string order, string cursor)
 		{
-			this.subjects = singleActor = new List<Actor>();
-			singleActor.Add(subject);
+			this.subjects = new Actor[] { subject };
 			this.order = order;
 			this.cursor = cursor;
 		}

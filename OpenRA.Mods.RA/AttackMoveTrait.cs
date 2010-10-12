@@ -13,11 +13,7 @@ namespace OpenRA.Mods.RA
 
 	class AttackMove : ITick, IResolveOrder, IOrderVoice
 	{
-		//Actor self;
-
 		public bool AttackMoving { get; set; }
-
-		//public AttackMove(Actor self) { this.self = self; AttackMoving = false; }
 
 		public string VoicePhraseForOrder(Actor self, Order order)
 		{
@@ -25,7 +21,7 @@ namespace OpenRA.Mods.RA
 			{
 				return "AttackMove";
 			}
-			else return null;
+			return null;
 		}
 
 		public void ResolveOrder(Actor self, Order order)
