@@ -10,6 +10,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using OpenRA.Traits;
 
 namespace OpenRA.Orders
 {
@@ -18,6 +19,7 @@ namespace OpenRA.Orders
 		readonly IEnumerable<Actor> subjects;
 		readonly string order;
 		readonly string cursor;
+		List<Actor> singleActor;
 
 		public GenericSelectTarget(IEnumerable<Actor> subjects, string order, string cursor)
 		{
@@ -28,7 +30,10 @@ namespace OpenRA.Orders
 
 		public GenericSelectTarget(Actor subject, string order, string cursor)
 		{
-			this.subjects = (IEnumerable<Actor>)subject;
+			this.subjects = singleActor = new List<Actor>();
+			singleActor.Add(subject);
+			this.order = order;
+			this.cursor = cursor;
 		}
 
 		public IEnumerable<Order> Order(World world, int2 xy, MouseInput mi)
@@ -50,8 +55,26 @@ namespace OpenRA.Orders
 		}
 
 		public virtual void Tick(World world) { }
-		public void RenderAfterWorld(World world) { }
-		public void RenderBeforeWorld(World world) { }
+
+		public void RenderBeforeWorld(World world)
+		{
+			foreach (var a in world.Selection.Actors)
+				if (!a.Destroyed)
+					foreach (var t in a.TraitsImplementing<IPreRenderSelection>())
+						t.RenderBeforeWorld(a);
+
+			Game.Renderer.Flush();
+		}
+
+		public void RenderAfterWorld(World world)
+		{
+			foreach (var a in world.Selection.Actors)
+				if (!a.Destroyed)
+					foreach (var t in a.TraitsImplementing<IPostRenderSelection>())
+						t.RenderAfterWorld(a);
+
+			Game.Renderer.Flush();
+		}
 
 		public string GetCursor(World world, int2 xy, MouseInput mi) { return world.Map.IsInMap(xy) ? cursor : "generic-blocked"; }
 	}
